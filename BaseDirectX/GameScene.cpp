@@ -99,29 +99,20 @@ void GameScene::Init()
 	object->PlayAnimation();*/
 	//sample.CreateModel("newOserro", ShaderManager::playerShader);
 	//sample.each.rotation.x = 0;
-
-	
-	
-
-	title.CreateSprite(L"Resource/Img/titel.png", XMFLOAT3(60, 60, 0));
-	space.CreateSprite(L"Resource/Img/PushSpace.png", XMFLOAT3(600, 600, 0));
-	sceneChage.CreateSprite(L"Resource/Img/SceneChange.png", XMFLOAT3(window_width / 2, window_height / 2, 0));
-	gameTime = gameMaxTime;
+	maru.CreateModel("maru", ShaderManager::playerShader);
 }
 
 void GameScene::TitleUpdate()
 {
-	
+	if (Input::KeyTrigger(DIK_SPACE))
+	{
+		t = 0;
+	}
 }
 
 void GameScene::SelectUpdate()
 {
-	if (Input::KeyTrigger(DIK_SPACE))
-	{
-		
-
-		SceneNum = GAME;
-	}
+	
 }
 
 void GameScene::GameUpdate()
@@ -131,20 +122,12 @@ void GameScene::GameUpdate()
 
 void GameScene::ResultUpdate()
 {
-	if (Input::KeyTrigger(DIK_SPACE))
-	{
-		SceneNum = TITLE;
-	}
+	
 }
 
 void GameScene::EndUpdate()
 {
-	if (Input::KeyTrigger(DIK_SPACE) || directInput->IsButtonPush(DirectInput::ButtonKind::Button01))
-	{
-		SceneNum = TITLE;
-		Camera::Init();
-		
-	}
+	
 }
 
 void GameScene::TitleDraw()
@@ -162,11 +145,7 @@ void GameScene::TitleDraw()
 	postEffect.Draw();
 
 	//スプライトの描画-------------------------
-	if (isSceneChange == false)
-	{
-		title.SpriteDraw();
-		space.SpriteDraw();
-	}Imgui::DrawImGui();
+	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
 }
@@ -201,9 +180,6 @@ void GameScene::GameDraw()
 {
 	//PostEffectのPreDraw
 	postEffect.PreDraw();
-	
-	ObjectParticles::Draw();
-	ParticleControl::Draw();
 
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
@@ -241,7 +217,6 @@ void GameScene::ResultDraw()
 	//スプライトの描画-------------------------
 	//titleSprite.SpriteDraw();
 
-	space.SpriteDraw();
 	Imgui::DrawImGui();
 	//描画コマンドここまで
 	BaseDirectX::UpdateBack();
@@ -287,3 +262,30 @@ void GameScene::LightUpdate()
 	light->SetSpotLightAtten(0, XMFLOAT3(spotLightAtten));
 	light->SetSpotLightAngle(0, XMFLOAT2(spotLightAngle));
 }
+
+float GameScene::Speed(float speed, float t)
+{
+	return speed * t;
+}
+
+float GameScene::Accel(float accel, float t)
+{
+	return accel * t * t;
+}
+
+float GameScene::EqualSpeed(float speed, float t)
+{
+	return speed * t;
+}
+
+float GameScene::EqualAccelSpeed(float accel, float t)
+{
+	return accel * t * t;
+}
+
+float GameScene::Gravity(float t)
+{
+	return G * t * t / 2.0f;
+}
+
+

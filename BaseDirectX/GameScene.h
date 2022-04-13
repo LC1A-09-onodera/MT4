@@ -2,7 +2,6 @@
 #include "../3DModel/Model.h"
 #include "../Camera/Camera.h"
 #include "../Sprite/Sprite.h"
-//#include "../Enemy/Enemy.h"
 #include "../Light/Light.h"
 #include "../RenderTarget/RenderTarget.h"
 #include "../PostEffect/PostEffect.h"
@@ -62,11 +61,6 @@ public://ÉVÅ[ÉìÇ≈égÇ§Ç‡ÇÃ
 	float acc;
 	float equalSpeed;
 	float accSpeed;
-	const float G;
+	const float G = 9.8f;
 	float t;
-	void VelFall(XMFLOAT3 vel , float t);
-	void AccFall(float acc, float t);
-	void EqualFall(float equalSpeed, float t);
-	void EqualAccFall(float acc,float t);
-	void Fall(float gravity, float t);
 };
