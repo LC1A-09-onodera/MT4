@@ -33,13 +33,13 @@ void Imgui::DrawImGui()
     ImGui_ImplDX12_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
-    ImGui::Begin("Test");//ウィンドウの名前
-    ImGui::SetWindowSize(ImVec2(400, 500), ImGuiCond_::ImGuiCond_FirstUseEver);
+    ImGui::Begin("Space->time = 0");//ウィンドウの名前
+    ImGui::SetWindowSize(ImVec2(200, 100), ImGuiCond_::ImGuiCond_FirstUseEver);
 
     //imguiここにいろいろ書く
     /*ImGui::Checkbox("spotLight1", &spotLight1);
     ImGui::SliderFloat3("ligthColor", lightColor, 0.0f, 1.0f);*/
-    ImGui::SliderFloat("dethLine", &dethLine, 0.0f, 50.0f);
+    //ImGui::SliderFloat("dethLine", &dethLine, 0.0f, 50.0f);
     //------------
 
     ImGui::End();

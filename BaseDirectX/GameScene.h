@@ -57,10 +57,12 @@ public://ÉVÅ[ÉìÇ≈égÇ§Ç‡ÇÃ
 
 	Model maru;
 	EachInfo each[5];
-	XMFLOAT3 vel{0, -1, 0};
-	float acc;
-	float equalSpeed;
-	float accSpeed;
 	const float G = 9.8f;
-	float t;
+	float t = 0;
+
+	float EqualSpeed(float v, float t);
+
+	float VerticalityUpcast(float v0, float t);
+
+	XMFLOAT3 Cannon(float vx, float v0, float t);
 };

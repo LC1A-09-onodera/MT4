@@ -66,8 +66,8 @@ void GameScene::Init()
 	BaseDirectX::GetAdress();
 	//カメラ初期化
 	Camera::Init();
-	Camera::eye = { 0, -10, -15.0 };
-	Camera::target = { 0, 100, 0 };
+	Camera::eye = { 0, 0, -15.0 };
+	Camera::target = { 0, 0, 0 };
 	Camera::Update();
 	//Imguiの初期化
 	Imgui::Init();
@@ -100,6 +100,8 @@ void GameScene::Init()
 	//sample.CreateModel("newOserro", ShaderManager::playerShader);
 	//sample.each.rotation.x = 0;
 	maru.CreateModel("maru", ShaderManager::playerShader);
+	each[0].CreateConstBuff0();
+	each[0].CreateConstBuff1();
 }
 
 void GameScene::TitleUpdate()
@@ -108,6 +110,10 @@ void GameScene::TitleUpdate()
 	{
 		t = 0;
 	}
+	t += 0.02f;
+	each[0].position = ConvertXMFLOAT3toXMVECTOR(Cannon(5.0f, 5.0f, t));
+	maru.Update(&each[0]);
+	LightUpdate();
 }
 
 void GameScene::SelectUpdate()
@@ -133,8 +139,8 @@ void GameScene::EndUpdate()
 void GameScene::TitleDraw()
 {
 	//PostEffectのPreDraw
-	postEffect.PreDraw();
-	ObjectParticles::Draw();
+	//postEffect.PreDraw();
+	//ObjectParticles::Draw();
 	//Draw3DObject(sample);
 	BaseDirectX::clearColor[0] = 0.0f;
 	BaseDirectX::clearColor[1] = 0.0f;
@@ -142,8 +148,8 @@ void GameScene::TitleDraw()
 	BaseDirectX::clearColor[3] = 0.0f;
 	BaseDirectX::UpdateFront();
 	//PostEffectのDraw
-	postEffect.Draw();
-
+	//postEffect.Draw();
+	Draw3DObject(maru);
 	//スプライトの描画-------------------------
 	Imgui::DrawImGui();
 	//描画コマンドここまで
@@ -263,29 +269,21 @@ void GameScene::LightUpdate()
 	light->SetSpotLightAngle(0, XMFLOAT2(spotLightAngle));
 }
 
-float GameScene::Speed(float speed, float t)
+float GameScene::EqualSpeed(float v, float t)
 {
-	return speed * t;
+	return v * t;
 }
 
-float GameScene::Accel(float accel, float t)
+float GameScene::VerticalityUpcast(float v0, float t)
 {
-	return accel * t * t;
+	float result = (G * pow(t, 2) * -0.5) + v0 * t;
+	return result;
 }
 
-float GameScene::EqualSpeed(float speed, float t)
+XMFLOAT3 GameScene::Cannon(float vx, float v0, float t)
 {
-	return speed * t;
+	XMFLOAT3 result{};
+	result.x = EqualSpeed(vx, t);
+	result.y = VerticalityUpcast(v0, t);
+	return result;
 }
-
-float GameScene::EqualAccelSpeed(float accel, float t)
-{
-	return accel * t * t;
-}
-
-float GameScene::Gravity(float t)
-{
-	return G * t * t / 2.0f;
-}
-
-
