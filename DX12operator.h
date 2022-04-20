@@ -2,7 +2,7 @@
 #include <DirectXMath.h>
 #include <cstdlib>
 #define PI 3.141592f
-
+#define G 9.8f
 using namespace DirectX;
 
 namespace ShlomonMath
@@ -14,6 +14,39 @@ namespace ShlomonMath
 	static const float Sin(float angle)
 	{
 		return sin(angle * PI / 180.0f);
+	}
+	static float EqualSpeed(float v, float t)
+	{
+		return v * t;
+	}
+	static float VerticalityUpcast(float v0, float t)
+	{
+		float result = (G * pow(t, 2) * -0.5) + v0 * t;
+		return result;
+	}
+	static float VerticalDrag(float weight)
+	{
+		return G * weight;
+	}
+	static float Friction(float coefficient, float verticalDrag)
+	{
+		float result = coefficient * verticalDrag;
+		if (isnan(result))
+		{
+			return 0;
+		}
+		//–€CŒW” * ‚’¼R—Í
+		return result;
+	}
+	static float AirResistance(float proportionalConstant, float v)
+	{
+		float result = proportionalConstant * v;
+		if (isnan(result))
+		{
+			return 0;
+		}
+		//”ä—á’è” * ‘¬“x
+		return result;
 	}
 }
 

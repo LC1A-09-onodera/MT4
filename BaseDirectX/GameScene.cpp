@@ -86,7 +86,7 @@ void GameScene::Init()
 	light = Light::Create();
 	//モデルすべてにライトを適用
 	Model::SetLight(light);
-	
+
 
 	//ポストエフェクトの初期化
 	postEffect.Initialize();
@@ -102,6 +102,10 @@ void GameScene::Init()
 	maru.CreateModel("maru", ShaderManager::playerShader);
 	each[0].CreateConstBuff0();
 	each[0].CreateConstBuff1();
+	each[1].position.m128_f32[0] = -5.0f;
+	each[1].position.m128_f32[1] = -3.0f;
+	each[1].CreateConstBuff0();
+	each[1].CreateConstBuff1();
 }
 
 void GameScene::TitleUpdate()
@@ -109,31 +113,39 @@ void GameScene::TitleUpdate()
 	if (Input::KeyTrigger(DIK_SPACE))
 	{
 		t = 0;
+		each[1].position.m128_f32[0] = -5.0f;
+		each[1].position.m128_f32[1] = -3.0f;
 	}
 	t += 0.02f;
+	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each[0].position);
 	each[0].position = ConvertXMFLOAT3toXMVECTOR(Cannon(5.0f, 5.0f, t));
-	maru.Update(&each[0]);
+	float res = ShlomonMath::AirResistance(0.1f, Lenght(each[0].position, pos));
+	float res2 = ShlomonMath::Friction(0.1f, ShlomonMath::VerticalDrag(1.0f));
+	each[0].position.m128_f32[0] -= res / 10;
+	each[0].position.m128_f32[1] -= res / 10;
+	each[1].position.m128_f32[0] += ShlomonMath::EqualSpeed(0.1f, t);
+	each[1].position.m128_f32[0] -= res2 / 100;
 	LightUpdate();
 }
 
 void GameScene::SelectUpdate()
 {
-	
+
 }
 
 void GameScene::GameUpdate()
 {
-	
+
 }
 
 void GameScene::ResultUpdate()
 {
-	
+
 }
 
 void GameScene::EndUpdate()
 {
-	
+
 }
 
 void GameScene::TitleDraw()
@@ -149,6 +161,9 @@ void GameScene::TitleDraw()
 	BaseDirectX::UpdateFront();
 	//PostEffectのDraw
 	//postEffect.Draw();
+	maru.Update(&each[0]);
+	Draw3DObject(maru);
+	maru.Update(&each[1]);
 	Draw3DObject(maru);
 	//スプライトの描画-------------------------
 	Imgui::DrawImGui();
@@ -161,7 +176,7 @@ void GameScene::SelectDraw()
 	//PostEffectのPreDraw
 	postEffect.PreDraw();
 
-	
+
 
 	//PostEffectのPostDraw
 	postEffect.PostDraw();
@@ -207,7 +222,7 @@ void GameScene::ResultDraw()
 	//PostEffectのPreDraw
 	postEffect.PreDraw();
 
-	
+
 
 	//PostEffectのPostDraw
 	postEffect.PostDraw();
@@ -233,7 +248,7 @@ void GameScene::EndDraw()
 	//PostEffectのPreDraw
 	postEffect.PreDraw();
 
-	
+
 
 	//PostEffectのPostDraw
 	postEffect.PostDraw();
@@ -269,21 +284,10 @@ void GameScene::LightUpdate()
 	light->SetSpotLightAngle(0, XMFLOAT2(spotLightAngle));
 }
 
-float GameScene::EqualSpeed(float v, float t)
-{
-	return v * t;
-}
-
-float GameScene::VerticalityUpcast(float v0, float t)
-{
-	float result = (G * pow(t, 2) * -0.5) + v0 * t;
-	return result;
-}
-
 XMFLOAT3 GameScene::Cannon(float vx, float v0, float t)
 {
 	XMFLOAT3 result{};
-	result.x = EqualSpeed(vx, t);
-	result.y = VerticalityUpcast(v0, t);
+	result.x = ShlomonMath::EqualSpeed(vx, t);
+	result.y = ShlomonMath::VerticalityUpcast(v0, t);
 	return result;
 }
