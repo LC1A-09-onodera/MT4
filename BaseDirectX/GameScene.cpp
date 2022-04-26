@@ -102,7 +102,7 @@ void GameScene::Init()
 	maru.CreateModel("maru", ShaderManager::playerShader);
 	each[0].CreateConstBuff0();
 	each[0].CreateConstBuff1();
-	each[1].position.m128_f32[0] = -5.0f;
+	each[1].position.m128_f32[0] = 0.0f;
 	each[1].position.m128_f32[1] = -3.0f;
 	each[1].CreateConstBuff0();
 	each[1].CreateConstBuff1();
@@ -113,8 +113,6 @@ void GameScene::TitleUpdate()
 	if (Input::KeyTrigger(DIK_SPACE))
 	{
 		t = 0;
-		each[1].position.m128_f32[0] = -5.0f;
-		each[1].position.m128_f32[1] = -3.0f;
 	}
 	t += 0.02f;
 	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each[0].position);
@@ -123,8 +121,7 @@ void GameScene::TitleUpdate()
 	float res2 = ShlomonMath::Friction(0.1f, ShlomonMath::VerticalDrag(1.0f));
 	each[0].position.m128_f32[0] -= res / 10;
 	each[0].position.m128_f32[1] -= res / 10;
-	each[1].position.m128_f32[0] += ShlomonMath::EqualSpeed(0.1f, t);
-	each[1].position.m128_f32[0] -= res2 / 100;
+	each[1].position.m128_f32[0] = ShlomonMath::EqualSpeed(2.0f, t) - res2;
 	LightUpdate();
 }
 
