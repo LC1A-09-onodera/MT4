@@ -11,6 +11,12 @@ bool Imgui::spotLight1;
 float Imgui::lightColor[3];
 float Imgui::dethLine = 25.0f;
 
+float Imgui::v1 = 1.0f;
+float Imgui::v2 = -0.4f;
+
+float Imgui::m1 = 1.5f;
+float Imgui::m2 = 1.0f;
+
 ComPtr<ID3D12DescriptorHeap> Imgui::CreateDescrriptorHeapForImgui()
 {
     ComPtr<ID3D12DescriptorHeap> ret;
@@ -40,6 +46,11 @@ void Imgui::DrawImGui()
     /*ImGui::Checkbox("spotLight1", &spotLight1);
     ImGui::SliderFloat3("ligthColor", lightColor, 0.0f, 1.0f);*/
     //ImGui::SliderFloat("dethLine", &dethLine, 0.0f, 50.0f);
+    ImGui::SliderFloat("v1", &v1, 0.0f, 2.0f);
+    ImGui::SliderFloat("v2", &v2, -2.0f, 0.0f);
+
+    ImGui::SliderFloat("m1", &m1, 0.0f, 5.0f);
+    ImGui::SliderFloat("m2", &m2, 0.0f, 5.0f);
     //------------
 
     ImGui::End();

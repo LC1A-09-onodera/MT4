@@ -25,5 +25,10 @@ public:
     static bool spotLight1;
     static float lightColor[3];
 
+    static float v1;
+    static float v2;
+    static float m1;
+    static float m2;
+
     static float dethLine;
 };

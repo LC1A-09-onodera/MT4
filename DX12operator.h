@@ -15,9 +15,9 @@ namespace ShlomonMath
 	{
 		return sin(angle * PI / 180.0f);
 	}
-	static float EqualSpeed(float v, float t)
+	static float EqualSpeed(float v, float t, float deltaT)
 	{
-		return v * t;
+		return v * deltaT;
 	}
 	static float VerticalityUpcast(float v0, float t)
 	{

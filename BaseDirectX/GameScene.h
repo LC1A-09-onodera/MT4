@@ -56,8 +56,18 @@ public://ÉVÅ[ÉìÇ≈égÇ§Ç‡ÇÃ
 	PostEffect postEffect;
 
 	Model maru;
+	Model sphere;
 	EachInfo each[5];
 	float t = 0;
+	float deltaT = 0.05f;
+
+	float v1;
+	float v2;
+	float m1;
+	float m2;
+	float startPos1;
+	float startPos2;
+	bool isCollision;
 
 	XMFLOAT3 Cannon(float vx, float v0, float t);
 };

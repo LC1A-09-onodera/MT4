@@ -100,28 +100,57 @@ void GameScene::Init()
 	//sample.CreateModel("newOserro", ShaderManager::playerShader);
 	//sample.each.rotation.x = 0;
 	maru.CreateModel("maru", ShaderManager::playerShader);
+	sphere.CreateModel("sphere", ShaderManager::playerShader);
+	startPos1 = -5.0f;
+	startPos2 = 5.0f;
+	each[0].position.m128_f32[0] = startPos1;
 	each[0].CreateConstBuff0();
 	each[0].CreateConstBuff1();
-	each[1].position.m128_f32[0] = 0.0f;
-	each[1].position.m128_f32[1] = -3.0f;
+	each[1].position.m128_f32[0] = startPos2;
 	each[1].CreateConstBuff0();
 	each[1].CreateConstBuff1();
+	v1 = Imgui::v1;
+	v2 = Imgui::v2;
+	m1 = Imgui::m1;
+	m2 = Imgui::m2;
+	isCollision = false;
 }
 
 void GameScene::TitleUpdate()
 {
 	if (Input::KeyTrigger(DIK_SPACE))
 	{
+		isCollision = false;
 		t = 0;
+		v1 = Imgui::v1;
+		v2 = Imgui::v2;
+		m1 = Imgui::m1;
+		m2 = Imgui::m2;
+		each[0].position.m128_f32[0] = startPos1;
+		each[1].position.m128_f32[0] = startPos2;
 	}
-	t += 0.02f;
-	XMFLOAT3 pos = ConvertXMVECTORtoXMFLOAT3(each[0].position);
-	each[0].position = ConvertXMFLOAT3toXMVECTOR(Cannon(5.0f, 5.0f, t));
-	float res = ShlomonMath::AirResistance(0.1f, Lenght(each[0].position, pos));
-	float res2 = ShlomonMath::Friction(0.1f, ShlomonMath::VerticalDrag(1.0f));
-	each[0].position.m128_f32[0] -= res / 10;
-	each[0].position.m128_f32[1] -= res / 10;
-	each[1].position.m128_f32[0] = ShlomonMath::EqualSpeed(2.0f, t) - res2;
+	t += deltaT;
+
+	each[0].position.m128_f32[0] += ShlomonMath::EqualSpeed(v1, t, deltaT);
+	each[1].position.m128_f32[0] += ShlomonMath::EqualSpeed(v2, t, deltaT);
+	if (Lenght(each[0].position, each[1].position) <= 2.0f && !isCollision)
+	{
+		isCollision = true;
+		float nowPower1 = v1 * m1;
+		float nowPower2 = v2 * m2;
+		float nowPower = nowPower1 + abs(nowPower2);
+		float addWeight = m1 + m2;
+		if (v1 > abs(v2))
+		{
+			v1 = nowPower * (m2 / addWeight);
+			v2 = nowPower * (m1 / addWeight);
+		}
+		else
+		{
+			v1 = -nowPower * (m2 / addWeight);
+			v2 = -nowPower * (m1 / addWeight);
+		}
+	}
 	LightUpdate();
 }
 
@@ -160,8 +189,8 @@ void GameScene::TitleDraw()
 	//postEffect.Draw();
 	maru.Update(&each[0]);
 	Draw3DObject(maru);
-	maru.Update(&each[1]);
-	Draw3DObject(maru);
+	sphere.Update(&each[1]);
+	Draw3DObject(sphere);
 	//スプライトの描画-------------------------
 	Imgui::DrawImGui();
 	//描画コマンドここまで
@@ -281,10 +310,10 @@ void GameScene::LightUpdate()
 	light->SetSpotLightAngle(0, XMFLOAT2(spotLightAngle));
 }
 
-XMFLOAT3 GameScene::Cannon(float vx, float v0, float t)
-{
-	XMFLOAT3 result{};
-	result.x = ShlomonMath::EqualSpeed(vx, t);
-	result.y = ShlomonMath::VerticalityUpcast(v0, t);
-	return result;
-}
+//XMFLOAT3 GameScene::Cannon(float vx, float v0, float t)
+//{
+//	XMFLOAT3 result{};
+//	result.x = ShlomonMath::EqualSpeed(vx, t);
+//	result.y = ShlomonMath::VerticalityUpcast(v0, t);
+//	return result;
+//}
